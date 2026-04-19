@@ -4,454 +4,306 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MC Kolbenfresser – Großkirchheim</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Oswald:wght@300;400;500;600&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --black:   #0e0d0b;
-    --coal:    #1a1917;
-    --ash:     #2e2c29;
-    --smoke:   #4a4844;
-    --mist:    #8a8880;
-    --bone:    #d6d2c4;
-    --cream:   #f0ede4;
-    --white:   #faf9f5;
-    --green:   #1D9E75;
-    --green-d: #0F6E56;
-    --green-l: #9FE1CB;
-    --amber:   #EF9F27;
-  }
+:root {
+  --black:    #050403;
+  --dark:     #0d0b09;
+  --coal:     #161310;
+  --iron:     #1e1a16;
+  --rust:     #2a1f14;
+  --smoke:    #3d3530;
+  --ash:      #5a5048;
+  --bone:     #9a8f82;
+  --parchment:#c8b89a;
+  --cream:    #e8d8c0;
+  --fire1:    #ff4500;
+  --fire2:    #ff7a00;
+  --fire3:    #ffb700;
+  --ember:    #cc2200;
+  --metal:    #6e6560;
+}
 
-  html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--black);
-    color: var(--cream);
-    min-height: 100vh;
-    font-size: 16px;
-    line-height: 1.7;
-  }
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  background: var(--black);
+  color: var(--cream);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  /* ── NAV ── */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--black);
-    border-bottom: 1px solid var(--ash);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 56px;
-  }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(200,60,0,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 20% at 80% 60%, rgba(160,30,0,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 0.08em;
-    color: var(--white);
-    text-decoration: none;
-  }
-  .nav-logo em { color: var(--green); font-style: normal; }
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(5,4,3,0.96);
+  border-bottom: 1px solid var(--smoke);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 60px;
+  backdrop-filter: blur(8px);
+}
+nav::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--fire2), var(--fire1), transparent);
+  opacity: 0.5;
+}
+.nav-logo {
+  font-family: 'Metal Mania', cursive;
+  font-size: 20px; letter-spacing: 0.06em;
+  color: var(--cream); text-decoration: none;
+  animation: flicker 8s infinite;
+}
+.nav-logo em { color: var(--fire2); font-style: normal; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--bone); text-decoration: none; cursor: pointer;
+  transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--fire2);
+  transform: scaleX(0); transition: transform 0.2s;
+}
+.nav-links a:hover { color: var(--fire3); }
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--fire2); }
 
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--mist);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: color 0.15s;
-    cursor: pointer;
-  }
-  .nav-links a:hover, .nav-links a.active { color: var(--white); }
-  .nav-links a.active { border-bottom: 1px solid var(--green); padding-bottom: 1px; }
+/* SECTIONS */
+section { display: none; position: relative; z-index: 1; }
+section.active { display: block; }
 
-  /* ── SECTIONS ── */
-  section { display: none; }
-  section.active { display: block; }
+/* HERO */
+.hero {
+  min-height: 92vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 4rem 2rem 3rem;
+  position: relative; overflow: hidden;
+}
+.hero-glow {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(ellipse, rgba(200,50,0,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-logo-wrap {
+  position: relative; margin-bottom: 2rem;
+  animation: floatIn 0.8s ease both;
+}
+.hero-logo-wrap img {
+  width: min(380px, 80vw); height: auto;
+  filter: drop-shadow(0 0 40px rgba(255,80,0,0.5)) drop-shadow(0 0 80px rgba(200,30,0,0.3));
+}
+.hero-tagline {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--fire2); margin-bottom: 1rem;
+  animation: floatIn 0.8s 0.1s ease both;
+}
+.hero-sub {
+  font-size: 17px; font-weight: 300; font-style: italic;
+  color: var(--bone); max-width: 480px; line-height: 1.7; margin-bottom: 2.5rem;
+  animation: floatIn 0.8s 0.2s ease both;
+}
+.hero-cta {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  animation: floatIn 0.8s 0.3s ease both;
+}
 
-  /* ── HERO ── */
-  .hero {
-    padding: 5rem 2rem 4rem;
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-  }
+/* BUTTONS */
+.btn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 13px 28px; cursor: pointer; text-decoration: none; display: inline-block;
+  transition: all 0.2s; border: none;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.btn-fire { background: var(--fire1); color: var(--black); }
+.btn-fire:hover { background: var(--fire2); box-shadow: 0 0 20px rgba(255,100,0,0.4); }
+.btn-ghost { background: transparent; color: var(--parchment); border: 1px solid var(--smoke); }
+.btn-ghost:hover { border-color: var(--fire1); color: var(--fire2); }
 
-  .hero-eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    color: var(--green);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .hero-eyebrow::before {
-    content: '';
-    display: inline-block;
-    width: 28px;
-    height: 1px;
-    background: var(--green);
-  }
+/* FIRE DIVIDER */
+.fire-divider {
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ember), var(--fire2), var(--fire3), var(--fire2), var(--ember), transparent);
+  opacity: 0.6; position: relative; z-index: 1;
+}
 
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(56px, 10vw, 110px);
-    line-height: 0.92;
-    letter-spacing: 0.02em;
-    color: var(--white);
-    margin-bottom: 1.5rem;
-  }
-  .hero-title .accent { color: var(--green); }
-  .hero-title .thin {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    font-style: italic;
-    font-size: 0.38em;
-    display: block;
-    color: var(--bone);
-    letter-spacing: 0.01em;
-    margin-bottom: 0.2em;
-  }
+/* STATS */
+.stats-strip {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  background: var(--dark); border-bottom: 1px solid var(--smoke); position: relative; z-index: 1;
+}
+.stat { padding: 2rem; text-align: center; border-right: 1px solid var(--smoke); }
+.stat:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Metal Mania', cursive; font-size: 36px;
+  color: var(--fire2); line-height: 1; margin-bottom: 4px;
+}
+.stat-label {
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 300;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--bone);
+}
 
-  .hero-sub {
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--mist);
-    max-width: 480px;
-    margin-bottom: 2.5rem;
-    line-height: 1.8;
-  }
+/* CONTENT */
+.content-wrap { max-width: 940px; margin: 0 auto; padding: 5rem 2rem; }
 
-  .hero-cta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 4rem;
-  }
+.sec-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; }
+.sec-title {
+  font-family: 'Metal Mania', cursive; font-size: 32px; color: var(--cream); white-space: nowrap;
+}
+.sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--smoke), transparent); }
 
-  .btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 12px 24px;
-    border-radius: 2px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.15s;
-    border: none;
-  }
-  .btn-solid { background: var(--green); color: var(--black); }
-  .btn-solid:hover { background: var(--green-d); }
-  .btn-outline { background: transparent; color: var(--bone); border: 1px solid var(--ash); }
-  .btn-outline:hover { border-color: var(--bone); color: var(--white); }
+/* FEATURES */
+.feat-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px; background: var(--smoke); border: 1px solid var(--smoke);
+}
+.feat {
+  background: var(--iron); padding: 2rem 1.5rem;
+  transition: background 0.2s; position: relative; overflow: hidden;
+}
+.feat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--ember), var(--fire2));
+  opacity: 0; transition: opacity 0.2s;
+}
+.feat:hover { background: var(--rust); }
+.feat:hover::before { opacity: 1; }
+.feat-icon {
+  font-family: 'Metal Mania', cursive; font-size: 28px;
+  color: var(--fire1); opacity: 0.5; margin-bottom: 1rem;
+}
+.feat-title {
+  font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--cream); margin-bottom: 0.5rem;
+}
+.feat-text { font-size: 14px; color: var(--bone); font-weight: 300; line-height: 1.7; }
 
-  /* Stats strip */
-  .stats-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--ash);
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .stat {
-    padding: 2rem;
-    border-right: 1px solid var(--ash);
-  }
-  .stat:last-child { border-right: none; }
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    color: var(--white);
-    letter-spacing: 0.03em;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-num em { color: var(--green); font-style: normal; }
-  .stat-label { font-size: 12px; color: var(--mist); letter-spacing: 0.06em; text-transform: uppercase; }
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.about-lead {
+  font-size: 20px; font-weight: 300; font-style: italic;
+  color: var(--parchment); line-height: 1.6; margin-bottom: 1.5rem;
+  border-left: 2px solid var(--fire1); padding-left: 1.25rem;
+}
+.about-body { font-size: 14px; color: var(--bone); font-weight: 300; line-height: 1.9; }
+.about-body p + p { margin-top: 1rem; }
+.crit-label {
+  font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fire2); margin-bottom: 1.25rem; font-weight: 400;
+}
+.crit-list { list-style: none; }
+.crit-list li {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--iron);
+  font-size: 15px; color: var(--parchment); font-weight: 300;
+}
+.crit-list li:last-child { border-bottom: none; }
+.fire-dot {
+  width: 6px; height: 6px; background: var(--fire1); flex-shrink: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
 
-  /* ── FEATURES ── */
-  .features {
-    padding: 5rem 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 3rem;
-  }
-  .section-eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--green);
-    white-space: nowrap;
-  }
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: var(--ash);
-  }
-  .feat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1px;
-    background: var(--ash);
-    border: 1px solid var(--ash);
-  }
-  .feat {
-    background: var(--coal);
-    padding: 2rem;
-    transition: background 0.2s;
-  }
-  .feat:hover { background: var(--ash); }
-  .feat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: var(--green);
-    margin-bottom: 1rem;
-    opacity: 0.6;
-  }
-  .feat-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-  }
-  .feat-text { font-size: 13px; color: var(--mist); font-weight: 300; line-height: 1.7; }
+/* MEMBERSHIP */
+.mem-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px; background: var(--smoke); border: 1px solid var(--smoke); margin-top: 3rem;
+}
+.mc {
+  background: var(--iron); padding: 1.75rem 1.5rem;
+  border-top: 2px solid transparent; transition: all 0.2s;
+}
+.mc:hover { background: var(--rust); border-top-color: var(--fire1); }
+.mc-type {
+  font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--fire2); margin-bottom: 4px;
+}
+.mc-title { font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 500; color: var(--cream); margin-bottom: 6px; }
+.mc-desc { font-size: 13px; color: var(--bone); font-weight: 300; line-height: 1.6; }
+.beitrag-bar {
+  border: 1px solid var(--smoke); border-top: none;
+  padding: 1.25rem 1.75rem; display: flex; align-items: center; gap: 1.5rem;
+  background: var(--coal);
+}
+.beitrag-val {
+  font-family: 'Metal Mania', cursive; font-size: 30px; color: var(--fire2); white-space: nowrap;
+}
+.beitrag-note { font-size: 13px; color: var(--bone); font-weight: 300; }
 
-  /* ── ABOUT ── */
-  .about-wrap {
-    padding: 5rem 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    margin-top: 3rem;
-  }
-  .about-lead {
-    font-size: 18px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--bone);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-    border-left: 2px solid var(--green);
-    padding-left: 1.25rem;
-  }
-  .about-body { font-size: 14px; color: var(--mist); line-height: 1.9; font-weight: 300; }
-  .about-body p + p { margin-top: 1rem; }
+/* CONTACT */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; }
+.contact-intro { font-size: 20px; font-weight: 300; font-style: italic; color: var(--parchment); margin-bottom: 2rem; line-height: 1.5; }
+.info-row { padding: 13px 0; border-bottom: 1px solid var(--iron); }
+.info-row:last-child { border-bottom: none; }
+.info-label { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ash); margin-bottom: 3px; }
+.info-val { font-size: 15px; color: var(--parchment); font-weight: 300; }
 
-  .criteria-title {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 1.5rem;
-  }
-  .criteria-list { list-style: none; }
-  .criteria-list li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--ash);
-    font-size: 14px;
-    color: var(--bone);
-    font-weight: 300;
-  }
-  .criteria-list li:last-child { border-bottom: none; }
-  .c-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    flex-shrink: 0;
-  }
+.form-group { margin-bottom: 1.1rem; }
+.form-group label {
+  display: block; font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); margin-bottom: 5px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; background: var(--iron); border: 1px solid var(--smoke);
+  color: var(--parchment); font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 300; padding: 10px 14px; border-radius: 0; outline: none;
+  transition: border-color 0.2s, background 0.2s; -webkit-appearance: none; appearance: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--fire1); background: var(--rust); }
+.form-group textarea { height: 110px; resize: vertical; }
+.form-group select option { background: var(--coal); }
+.success-msg {
+  display: none; margin-top: 1rem; padding: 12px 16px;
+  background: var(--iron); border-left: 2px solid var(--fire1);
+  font-size: 14px; color: var(--fire3); font-weight: 300; font-style: italic;
+}
 
-  /* Membership cards */
-  .membership-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1px;
-    background: var(--ash);
-    border: 1px solid var(--ash);
-    margin-top: 3rem;
-  }
-  .mc {
-    background: var(--coal);
-    padding: 1.5rem 2rem;
-  }
-  .mc-type {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 0.5rem;
-  }
-  .mc-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-  }
-  .mc-desc { font-size: 13px; color: var(--mist); font-weight: 300; line-height: 1.6; }
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--smoke); background: var(--dark);
+  padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.5rem; position: relative; z-index: 1;
+}
+footer::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--fire1), var(--fire2), var(--fire1), transparent);
+  opacity: 0.4;
+}
+.footer-logo { font-family: 'Metal Mania', cursive; font-size: 15px; color: var(--bone); }
+.footer-logo em { color: var(--fire2); font-style: normal; }
+.footer-txt { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 0.08em; color: var(--ash); }
 
-  .beitrag-bar {
-    border: 1px solid var(--ash);
-    border-top: none;
-    padding: 1.25rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    background: var(--coal);
-  }
-  .beitrag-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--green);
-    white-space: nowrap;
-  }
-  .beitrag-note { font-size: 13px; color: var(--mist); font-weight: 300; }
+/* ANIMATIONS */
+@keyframes floatIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes flicker { 0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:0.85} 94%{opacity:1} 96%{opacity:0.9} 97%{opacity:1} }
 
-  /* ── CONTACT ── */
-  .contact-wrap {
-    padding: 5rem 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 4rem;
-    margin-top: 3rem;
-  }
-  .contact-info-title {
-    font-size: 22px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--bone);
-    margin-bottom: 2rem;
-    line-height: 1.4;
-  }
-  .info-row {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--ash);
-  }
-  .info-row:last-child { border-bottom: none; }
-  .info-label {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--smoke);
-    margin-bottom: 3px;
-    font-weight: 500;
-  }
-  .info-val { font-size: 14px; color: var(--bone); font-weight: 300; }
-
-  /* Form */
-  .form-group { margin-bottom: 1.25rem; }
-  .form-group label {
-    display: block;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--smoke);
-    margin-bottom: 6px;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    background: var(--coal);
-    border: 1px solid var(--ash);
-    color: var(--bone);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    padding: 10px 14px;
-    border-radius: 2px;
-    outline: none;
-    transition: border-color 0.15s;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: var(--green);
-  }
-  .form-group textarea { height: 110px; resize: vertical; }
-  .form-group select { cursor: pointer; }
-
-  .success-msg {
-    display: none;
-    margin-top: 1rem;
-    padding: 12px 16px;
-    background: var(--ash);
-    border-left: 2px solid var(--green);
-    font-size: 13px;
-    color: var(--green-l);
-    font-weight: 300;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--ash);
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px;
-    letter-spacing: 0.08em;
-    color: var(--smoke);
-  }
-  .footer-logo em { color: var(--green); font-style: normal; }
-  .footer-txt { font-size: 12px; color: var(--smoke); font-weight: 300; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .stats-strip { grid-template-columns: 1fr; }
-    .stat { border-right: none; border-bottom: 1px solid var(--ash); }
-    .stat:last-child { border-bottom: none; }
-    .hero { padding: 3rem 1.25rem 2rem; }
-    .features, .about-wrap, .contact-wrap { padding: 3rem 1.25rem; }
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  section.active .hero-eyebrow  { animation: fadeUp 0.4s ease both; }
-  section.active .hero-title    { animation: fadeUp 0.4s 0.08s ease both; }
-  section.active .hero-sub      { animation: fadeUp 0.4s 0.15s ease both; }
-  section.active .hero-cta      { animation: fadeUp 0.4s 0.22s ease both; }
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .stats-strip { grid-template-columns: 1fr; }
+  .stat { border-right: none; border-bottom: 1px solid var(--smoke); }
+  .stat:last-child { border-bottom: none; }
+  .hero { min-height: auto; padding: 3rem 1.25rem 2rem; }
+  .content-wrap { padding: 3rem 1.25rem; }
+}
 </style>
 </head>
 <body>
@@ -465,76 +317,50 @@
   </ul>
 </nav>
 
-<!-- ══ HOME ══ -->
+<!-- HOME -->
 <section id="home" class="active">
   <div class="hero">
-    <div class="hero-eyebrow">Gegründet 2026 · Großkirchheim, Kärnten</div>
-    <h1 class="hero-title">
-      <span class="thin">Moped fahren.</span>
-      MC <span class="accent">Kolben</span>fresser
-    </h1>
-    <p class="hero-sub">Ein Verein für Mopedfahrerinnen und Mopedfahrer, die klassische Kleinkrafträder mit rotem Kennzeichen lieben — für Ausfahrten, Schrauben und echte Kameradschaft.</p>
+    <div class="hero-glow"></div>
+    <div class="hero-logo-wrap">
+      <img src="logo.png" alt="MC Kolbenfresser Logo">
+    </div>
+    <div class="hero-tagline">Gegründet 2026 · Großkirchheim, Kärnten</div>
+    <p class="hero-sub">Moped fahren, Schrauben, Kameradschaft — für alle, die klassische Kleinkrafträder mit rotem Kennzeichen lieben.</p>
     <div class="hero-cta">
-      <button class="btn btn-solid" onclick="show('contact', document.querySelectorAll('.nav-links a')[2])">Mitglied werden</button>
-      <button class="btn btn-outline" onclick="show('about', document.querySelectorAll('.nav-links a')[1])">Mehr erfahren</button>
+      <button class="btn btn-fire" onclick="show('contact', document.querySelectorAll('.nav-links a')[2])">Mitglied werden</button>
+      <button class="btn btn-ghost" onclick="show('about', document.querySelectorAll('.nav-links a')[1])">Über uns</button>
     </div>
   </div>
+
+  <div class="fire-divider"></div>
 
   <div class="stats-strip">
-    <div class="stat">
-      <div class="stat-num">50<em> ccm</em></div>
-      <div class="stat-label">max. Hubraum</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num"><em>Rotes</em></div>
-      <div class="stat-label">Kennzeichen Pflicht</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">2026</div>
-      <div class="stat-label">Gründungsjahr</div>
-    </div>
+    <div class="stat"><div class="stat-num">50 ccm</div><div class="stat-label">max. Hubraum</div></div>
+    <div class="stat"><div class="stat-num">Rotes</div><div class="stat-label">Kennzeichen Pflicht</div></div>
+    <div class="stat"><div class="stat-num">2026</div><div class="stat-label">Gründungsjahr</div></div>
   </div>
 
-  <div class="features">
-    <div class="section-header">
-      <span class="section-eyebrow">Was uns ausmacht</span>
-      <div class="section-line"></div>
+  <div class="content-wrap">
+    <div class="sec-header">
+      <div class="sec-title">Was uns antreibt</div>
+      <div class="sec-line"></div>
     </div>
     <div class="feat-grid">
-      <div class="feat">
-        <div class="feat-num">01</div>
-        <div class="feat-title">Gemeinschaft</div>
-        <div class="feat-text">Kameradschaft unter Gleichgesinnten — auf der Straße und in der Werkstatt.</div>
-      </div>
-      <div class="feat">
-        <div class="feat-num">02</div>
-        <div class="feat-title">Ausfahrten</div>
-        <div class="feat-text">Gemeinsame Touren durch Kärnten und die Alpenregion — organisiert vom Streckenmeister.</div>
-      </div>
-      <div class="feat">
-        <div class="feat-num">03</div>
-        <div class="feat-title">Klassiker erhalten</div>
-        <div class="feat-text">Pflege und Restaurierung von Mopeds. Erfahrungsaustausch über Technik und Schrauben.</div>
-      </div>
-      <div class="feat">
-        <div class="feat-num">04</div>
-        <div class="feat-title">Veranstaltungen</div>
-        <div class="feat-text">Treffen, Ausstellungen und Events rund ums Moped — für Mitglieder und Interessierte.</div>
-      </div>
+      <div class="feat"><div class="feat-icon">I</div><div class="feat-title">Gemeinschaft</div><div class="feat-text">Echte Kameradschaft unter Gleichgesinnten — auf der Straße und in der Werkstatt.</div></div>
+      <div class="feat"><div class="feat-icon">II</div><div class="feat-title">Ausfahrten</div><div class="feat-text">Gemeinsame Touren durch Kärnten und die Alpenregion, organisiert vom Streckenmeister.</div></div>
+      <div class="feat"><div class="feat-icon">III</div><div class="feat-title">Klassiker erhalten</div><div class="feat-text">Pflege und Restaurierung von Mopeds. Erfahrungsaustausch über Technik und Schrauben.</div></div>
+      <div class="feat"><div class="feat-icon">IV</div><div class="feat-title">Veranstaltungen</div><div class="feat-text">Treffen, Events und Ausstellungen rund ums Moped — für Mitglieder und Interessierte.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ══ ABOUT ══ -->
+<!-- ABOUT -->
 <section id="about">
-  <div class="about-wrap">
-    <div class="section-header">
-      <span class="section-eyebrow">Über den Verein</span>
-      <div class="section-line"></div>
-    </div>
+  <div class="content-wrap">
+    <div class="sec-header"><div class="sec-title">Über den Club</div><div class="sec-line"></div></div>
     <div class="about-grid">
       <div>
-        <p class="about-lead">Wir sind ein gemeinnütziger Verein für alle, die das Fahren mit klassischen Kleinkrafträdern lieben.</p>
+        <p class="about-lead">Ein gemeinnütziger Verein für alle, die das Fahren mit klassischen Kleinkrafträdern lieben.</p>
         <div class="about-body">
           <p>Der MC Kolbenfresser wurde 2026 in Großkirchheim, Kärnten gegründet. Unser Tätigkeitsbereich erstreckt sich auf ganz Österreich.</p>
           <p>Wir organisieren gemeinsame Ausfahrten, Treffen und Veranstaltungen rund ums Moped — und pflegen den Erfahrungsaustausch rund um Technik und Restaurierung.</p>
@@ -542,38 +368,23 @@
         </div>
       </div>
       <div>
-        <div class="criteria-title">Aufnahmevoraussetzungen</div>
-        <ul class="criteria-list">
-          <li><div class="c-dot"></div>Mindestalter 18 Jahre</li>
-          <li><div class="c-dot"></div>Moped mit rotem Kennzeichen</li>
-          <li><div class="c-dot"></div>Max. 50 ccm · max. 45 km/h</li>
-          <li><div class="c-dot"></div>Schriftlicher Aufnahmeantrag</li>
-          <li><div class="c-dot"></div>Zustimmung des Vorstands</li>
-          <li><div class="c-dot"></div>Ablehnung bedarf keiner Begründung</li>
+        <div class="crit-label">Aufnahmevoraussetzungen</div>
+        <ul class="crit-list">
+          <li><div class="fire-dot"></div>Mindestalter 18 Jahre</li>
+          <li><div class="fire-dot"></div>Moped mit rotem Kennzeichen</li>
+          <li><div class="fire-dot"></div>Max. 50 ccm · max. 45 km/h</li>
+          <li><div class="fire-dot"></div>Schriftlicher Aufnahmeantrag</li>
+          <li><div class="fire-dot"></div>Zustimmung des Vorstands</li>
+          <li><div class="fire-dot"></div>Ablehnung bedarf keiner Begründung</li>
         </ul>
       </div>
     </div>
 
-    <div class="section-header" style="margin-top: 4rem;">
-      <span class="section-eyebrow">Mitgliedschaft</span>
-      <div class="section-line"></div>
-    </div>
-    <div class="membership-grid">
-      <div class="mc">
-        <div class="mc-type">Ordentlich</div>
-        <div class="mc-title">Bruder / Schwester</div>
-        <div class="mc-desc">Vollmitglied mit Stimmrecht. Aktiv bei Ausfahrten und Veranstaltungen.</div>
-      </div>
-      <div class="mc">
-        <div class="mc-type">Fördernd</div>
-        <div class="mc-title">Fördermitglied</div>
-        <div class="mc-desc">Unterstützt den Verein finanziell. Kein eigenes Moped erforderlich. Kein Stimmrecht.</div>
-      </div>
-      <div class="mc">
-        <div class="mc-type">Ehren</div>
-        <div class="mc-title">Ehrenmitglied</div>
-        <div class="mc-desc">Auf Vorschlag des Vorstands durch die Generalversammlung ernannt.</div>
-      </div>
+    <div class="sec-header" style="margin-top:4rem;"><div class="sec-title">Mitgliedschaft</div><div class="sec-line"></div></div>
+    <div class="mem-grid">
+      <div class="mc"><div class="mc-type">Ordentlich</div><div class="mc-title">Bruder / Schwester</div><div class="mc-desc">Vollmitglied mit Stimmrecht. Aktiv bei Ausfahrten und Veranstaltungen. Vollständiger Patch.</div></div>
+      <div class="mc"><div class="mc-type">Fördernd</div><div class="mc-title">Fördermitglied</div><div class="mc-desc">Unterstützt den Verein finanziell. Kein eigenes Moped erforderlich. Kein Stimmrecht.</div></div>
+      <div class="mc"><div class="mc-type">Ehren</div><div class="mc-title">Ehrenmitglied</div><div class="mc-desc">Auf Vorschlag des Vorstands durch die Generalversammlung ernannt. Beitragsfrei.</div></div>
     </div>
     <div class="beitrag-bar">
       <div class="beitrag-val">20 – 50 €</div>
@@ -582,44 +393,22 @@
   </div>
 </section>
 
-<!-- ══ CONTACT ══ -->
+<!-- CONTACT -->
 <section id="contact">
-  <div class="contact-wrap">
-    <div class="section-header">
-      <span class="section-eyebrow">Kontakt</span>
-      <div class="section-line"></div>
-    </div>
+  <div class="content-wrap">
+    <div class="sec-header"><div class="sec-title">Kontakt</div><div class="sec-line"></div></div>
     <div class="contact-grid">
       <div>
-        <p class="contact-info-title">Interesse? Schreib uns — wir melden uns bald.</p>
-        <div class="info-row">
-          <div class="info-label">Sitz des Vereins</div>
-          <div class="info-val">Großkirchheim, Kärnten</div>
-        </div>
-        <div class="info-row">
-          <div class="info-label">Gegründet</div>
-          <div class="info-val">2026</div>
-        </div>
-        <div class="info-row">
-          <div class="info-label">Rechtsgrundlage</div>
-          <div class="info-val">Österr. Vereinsgesetz 2002</div>
-        </div>
-        <div class="info-row">
-          <div class="info-label">ZVR-Nummer</div>
-          <div class="info-val">ausstehend</div>
-        </div>
+        <p class="contact-intro">Interesse? Schreib uns — wir melden uns bald.</p>
+        <div class="info-row"><div class="info-label">Sitz des Vereins</div><div class="info-val">Großkirchheim, Kärnten</div></div>
+        <div class="info-row"><div class="info-label">Gegründet</div><div class="info-val">2026</div></div>
+        <div class="info-row"><div class="info-label">Rechtsgrundlage</div><div class="info-val">Österr. Vereinsgesetz 2002</div></div>
+        <div class="info-row"><div class="info-label">ZVR-Nummer</div><div class="info-val">ausstehend</div></div>
       </div>
       <div>
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" placeholder="Vor- und Nachname">
-        </div>
-        <div class="form-group">
-          <label>E-Mail</label>
-          <input type="email" placeholder="deine@email.at">
-        </div>
-        <div class="form-group">
-          <label>Betreff</label>
+        <div class="form-group"><label>Name</label><input type="text" placeholder="Vor- und Nachname"></div>
+        <div class="form-group"><label>E-Mail</label><input type="email" placeholder="deine@email.at"></div>
+        <div class="form-group"><label>Betreff</label>
           <select>
             <option>Mitgliedschaft anfragen</option>
             <option>Allgemeine Frage</option>
@@ -627,17 +416,15 @@
             <option>Sonstiges</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Nachricht</label>
-          <textarea placeholder="Deine Nachricht..."></textarea>
-        </div>
-        <button class="btn btn-solid" onclick="submitForm()" style="width:100%;">Nachricht senden</button>
-        <div class="success-msg" id="success-msg">Danke für deine Nachricht — wir melden uns bald!</div>
+        <div class="form-group"><label>Nachricht</label><textarea placeholder="Deine Nachricht..."></textarea></div>
+        <button class="btn btn-fire" onclick="submitForm()" style="width:100%;">Nachricht senden</button>
+        <div class="success-msg" id="success-msg">Danke, Bruder — wir melden uns bald!</div>
       </div>
     </div>
   </div>
 </section>
 
+<div class="fire-divider"></div>
 <footer>
   <div class="footer-logo">MC <em>Kolbenfresser</em></div>
   <div class="footer-txt">© 2026 MC Kolbenfresser · Großkirchheim, Kärnten</div>
